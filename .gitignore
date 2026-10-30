@@ -30,3 +30,15 @@ evidence/
 output/
 wayback/snapshots.csv
 wayback/promising_snapshots.txt
+
+# Private question datasets
+output/questions.json
+output/questions.jsonl
+output/questions.csv
+output/assets/
+bbplus_all/
+bbplus_dec2025/
+bbplus_recent/
+bbplus_export/
+
+/bbplus-extractor/
