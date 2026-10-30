@@ -1,0 +1,20 @@
+--- extract_bbplus.original.py	2026-10-29 23:50:33
++++ MODIFIED_FILE.py	2026-10-29 23:50:33
+@@ -40,7 +40,7 @@
+     "div.wpProQuiz_question",
+ ]
+ SKIP_TAGS = "script,style,noscript,iframe,button,input,textarea,select"
+-UI_MARKERS = ".wpProQuiz_response,.wpProQuiz_correct,.wpProQuiz_incorrect,.wpProQuiz_answerCorrect,.wpProQuiz_questionListItem > input"
++UI_MARKERS = ".wpProQuiz_response,.wpProQuiz_correct,.wpProQuiz_incorrect,.wpProQuiz_answerCorrect,.wpProQuiz_questionListItem > input,.ld-quiz-question-item__status,.ld-quiz-question-item__status *"
+ DOWNLOAD_TIMEOUT = 25
+ LOG = logging.getLogger("bbplus")
+ 
+@@ -144,6 +144,8 @@
+             "question_type": q_list.get("data-type") if q_list else None,
+             "question_text": content,
+             "question_html": clean_html(text_node),
++            "passage_html": clean_html(text_node.select_one(".lsqb-passage-content")) if text_node else "",
++            "passage_text": clean_text(text_node.select_one(".lsqb-passage-content")) if text_node else "",
+             "choices": choices,
+             "correct_option_indexes": correct if correct else None,
+             "explanations": explanations,

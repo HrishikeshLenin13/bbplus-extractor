@@ -1,0 +1,17 @@
+{
+  "historical_advertised_items": 7162,
+  "extracted_records": 196,
+  "unique_record_ids": 196,
+  "source_modules": 8,
+  "question_text_complete": 196,
+  "choices_present": 196,
+  "passages_present": 131,
+  "images_referenced_records": 12,
+  "verified_answers": 0,
+  "explanations_present": 0,
+  "subject_counts": {
+    "Reading and Writing": 108,
+    "Math": 88
+  },
+  "reconciliation_status": "not reconciled to authoritative inventory"
+}

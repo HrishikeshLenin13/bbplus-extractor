@@ -1,0 +1,32 @@
+.venv/
+__pycache__/
+*.pyc
+.DS_Store
+
+# Recovered third-party content
+bbplus_all/
+bbplus_dec2025/
+bbplus_recent/
+bbplus_sample/
+bbplus_export/
+output/questions.json
+output/questions.jsonl
+output/questions.csv
+output/assets/
+output/source_manifest.json
+output/missing_content_report.json
+
+# Local data and credentials
+.env
+.env.*
+cookies.json
+session.json
+*.sqlite
+
+# Generated discovery and recovery data
+all_bbplus_urls.txt
+dec2025_urls.txt
+evidence/
+output/
+wayback/snapshots.csv
+wayback/promising_snapshots.txt

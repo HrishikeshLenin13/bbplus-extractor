@@ -1,0 +1,26 @@
+Changed branch/fields: choice status text removal; passage_html and passage_text extraction.
+Original source SHA256: bda9549cedc6a38982220ac5d3e5d0b262b113e5562064427d4257c85b09ce68
+Modified SHA256: 04e52b44448da47847d1cc399f80a9824bec9b42d1308673f59455a8397d706c
+Original dataset SHA256: 19e614cd0fa4fc359cb40890a1c2315f6cdcba2dac995ae50dc3735a53c8cf4b
+MODIFIED_FILE: /Users/HrishiL/Downloads/bbplus_extractor/evidence/2026-10-29/MODIFIED_FILE.py
+DIFF_FILE: /Users/HrishiL/Downloads/bbplus_extractor/evidence/2026-10-29/DIFF_FILE.patch
+VERIFICATION: /Users/HrishiL/Downloads/bbplus_extractor/evidence/2026-10-29/VERIFICATION.txt
+ROLLBACK: /Users/HrishiL/Downloads/bbplus_extractor/evidence/2026-10-29/ROLLBACK.sh
+BASELINE command: .venv/bin/python test_parser.py
+BASELINE input: original extract_bbplus.py and SAMPLE_HTML
+BASELINE literal output: Offline parser test: PASS
+BASELINE exit status: 0
+MODIFIED command: .venv/bin/python evidence/2026-10-29/verify_patch.py
+MODIFIED input: MODIFIED_FILE.py and inline passage/status fixture
+MODIFIED literal output: PASS: choice status excluded; passage preserved
+MODIFIED exit status: 0
+ROLLBACK command: cp evidence/2026-10-29/MODIFIED_FILE.py /tmp/bbplus_rollback_test.py; evidence/2026-10-29/ROLLBACK.sh /tmp/bbplus_rollback_test.py; cmp evidence/2026-10-29/extract_bbplus.original.py /tmp/bbplus_rollback_test.py
+ROLLBACK input: modified copy in /tmp/bbplus_rollback_test.py
+ROLLBACK literal output: (empty; cmp match)
+ROLLBACK exit status: 0
+Restored behavior/status: rollback copy matches original byte-for-byte; MODIFIED_FILE.py remains changed.
+Local recovery command: .venv/bin/python build_database.py
+Local recovery result: 196 records, 8 source modules, 0 verified answers; original dataset unchanged.
+Live discovery command: .venv/bin/python discover_public.py
+Live discovery literal output: [('ok', 289, 0), ('ok', 154, 0), ('ok', 0, 6)]
+Live discovery exit status: 0
