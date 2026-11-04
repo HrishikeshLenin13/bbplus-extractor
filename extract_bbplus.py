@@ -46,13 +46,19 @@ LOG = logging.getLogger("bbplus")
 
 
 def normalize(url: str, base: str = ROOT) -> str | None:
-    absolute = urljoin(base, url.strip())
-    p = urlsplit(absolute)
-    if p.scheme not in ("https", "http") or (p.hostname or "").lower() not in HOSTS:
+    if not isinstance(url,str) or not isinstance(base,str):return None
+    try:
+        absolute = urljoin(base, url.strip())
+        p = urlsplit(absolute)
+        if p.scheme not in ("https", "http") or (p.hostname or "").lower() not in HOSTS:
+            return None
+        if p.username is not None or p.password is not None or p.port not in (None,80,443):
+            return None
+        if not p.path.startswith(("/courses/", "/bluebook-plus-", "/wp-content/uploads/")):
+            return None
+        return urlunsplit(("https", p.hostname.lower(), p.path or "/", "", ""))
+    except ValueError:
         return None
-    if not p.path.startswith(("/courses/", "/bluebook-plus-", "/wp-content/uploads/")):
-        return None
-    return urlunsplit(("https", p.netloc.lower(), p.path or "/", "", ""))
 
 
 def clean_text(node: Tag | None) -> str:
