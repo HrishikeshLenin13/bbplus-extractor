@@ -2,8 +2,11 @@
 import argparse,json
 from pathlib import Path
 
-def validate_jsonl(path):
-    errors=[];seen=set();records=0
+def validate_jsonl(path, *, max_errors=None):
+    """Scan every record, optionally limiting the number of retained diagnostics."""
+    if max_errors is not None and (type(max_errors) is not int or max_errors < 0):
+        raise ValueError('max_errors must be a nonnegative integer')
+    errors=[];seen=set();records=0;error_count=0
     with Path(path).open(encoding='utf-8-sig') as source:
         for number,line in enumerate(source,1):
             if not line.strip():continue
@@ -22,13 +25,24 @@ def validate_jsonl(path):
                     if not isinstance(answers,list) or any(type(index) is not int or index<0 or index>=len(choices) for index in answers):raise ValueError('answer indexes must reference known choices')
                     if len(set(answers))!=len(answers):raise ValueError('answer indexes must be unique')
             except (ValueError,TypeError) as error:
-                errors.append({'line':number,'message':str(error)})
-    return {'ok':not errors,'records':records,'errors':errors}
+                error_count+=1
+                if max_errors is None or len(errors)<max_errors:
+                    errors.append({'line':number,'message':str(error)})
+    report={'ok':error_count==0,'records':records,'errors':errors}
+    if max_errors is not None:
+        report['error_count']=error_count
+    return report
 
 def main(argv=None):
-    parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('path',type=Path);args=parser.parse_args(argv)
-    try:report=validate_jsonl(args.path)
-    except (OSError,UnicodeError) as error:report={'ok':False,'records':0,'errors':[{'message':str(error)}]}
+    parser=argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('path',type=Path)
+    parser.add_argument('--max-errors',type=int,help='cap stored record diagnostics; 0 counts only')
+    args=parser.parse_args(argv)
+    if args.max_errors is not None and args.max_errors<0:
+        parser.error('--max-errors must be nonnegative')
+    try:report=validate_jsonl(args.path,max_errors=args.max_errors)
+    except (OSError,UnicodeError) as error:
+        report={'ok':False,'records':0,'errors':[{'message':str(error)}]}
     print(json.dumps(report));return 0 if report['ok'] else 1
 
 if __name__=='__main__':raise SystemExit(main())
