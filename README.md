@@ -46,3 +46,6 @@ indexes without downloading or modifying data. For large files, add
 `--max-errors 20` to keep only the first 20 record diagnostics while still
 scanning every record and reporting the full `error_count`. Use `--max-errors 0`
 for a count-only report. Invalid input still exits with status 1.
+
+To validate UTF-8 JSONL from a pipe without writing an intermediate file, pass
+`-` as the path: `cat questions.jsonl | python validate_jsonl.py - --max-errors 20`.

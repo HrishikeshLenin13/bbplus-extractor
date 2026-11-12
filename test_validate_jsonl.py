@@ -29,3 +29,27 @@ class JsonlPreflight(unittest.TestCase):
             })
             with self.assertRaises(ValueError):
                 validate_jsonl(path, max_errors=-1)
+
+
+    def test_cli_validates_utf8_stdin_and_keeps_physical_line_numbers(self):
+        import subprocess
+        import sys
+
+        cli = Path(__file__).with_name("validate_jsonl.py")
+        result = subprocess.run(
+            [sys.executable, str(cli), "-", "--max-errors", "1"],
+            input='\ufeff{"id":"café"}\n\n{"id":"café"}\n'.encode("utf-8"),
+            capture_output=True,
+            check=False,
+        )
+        self.assertEqual(result.returncode, 1, result.stderr)
+        self.assertEqual(json.loads(result.stdout), {
+            "ok": False, "records": 2, "error_count": 1,
+            "errors": [{"line": 3, "message": "duplicate id"}],
+        })
+        bad_encoding = subprocess.run(
+            [sys.executable, str(cli), "-"], input=b"\xff", capture_output=True, check=False,
+        )
+        self.assertEqual(bad_encoding.returncode, 1)
+        self.assertFalse(json.loads(bad_encoding.stdout)["ok"])
+        self.assertEqual(bad_encoding.stderr, b"")
